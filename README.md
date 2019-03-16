@@ -1,4 +1,4 @@
-# task-manager-app
+# TASK MANAGER APP
 This is an app to manage your daily routines
 
 # PROCEDURES
