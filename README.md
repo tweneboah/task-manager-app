@@ -86,6 +86,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
   1. This is the structure of our database
   2. This accept two arguement; the name of your model and the fields you want to create
   3. We can set type and validation of the field
+  4. Model accept the name of your collection/table, objects thus the fields of the object
+  5. Model also accept other options like middleware
   ```javascript
     const User = mongoose.model('User', {
    name: {
@@ -287,6 +289,107 @@ app.listen(port, () => {
     console.log('Server is runing on port ' + port)
 })
 ```
+
+# PROCUDURE
+# D - MIDDLEWARE
+
+1. Middleware is the act of customising your model, adding more functionality to it
+2. We pass all other functionality through the model
+3. We can register a function to occure before or after an event occures
+4. We can run a code before a user is validated
+5. We register middleware inside model
+6. Model accept mongodb collection type, objects and middleware
+7. When we pass objects to a model, behind the scene mongoose create a schema
+7. To use more advance features inside the model you need create a scema
+
+## HOW TO PASS MIDDLEWARE TO A MODEL
+1. Create an instance of a schema
+```javascript
+const userSchema = new mongose.Schema()
+```
+2. This schema accept the object we want to add more functionality to it
+3. After that we pass that schema to the model 
+
+# CODE DEMO
+```javascript
+//CREATING SCHEMA
+const userSchema = new mongoose.Schema({
+    name: {
+         type: String,
+         required: true,
+         trim: true
+    },
+    email: {
+        type:String,
+        required: true,
+        trim: true,
+        lowercase: true,
+        validate(value) {
+            if(!validator.isEmail(value)) {
+                throw new Error('Email is invalid')
+            }
+        }
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 7,
+      trim: true,
+      validate(value){
+          if(value.toLowerCase().includes('password')) {
+              throw new Error('Password cannot contain password')
+          }
+      }
+    },
+    age: {
+         type: Number,
+         default: 0,
+         validate(value) {
+             if(value < 0){
+                 throw new Error('Age must be a positive number')
+             }
+         }
+    }
+  })
+  
+//USER MODEL
+ const User = mongoose.model('User', userSchema )
+```
+4. Now we can take advantage of middleware
+5. Middleware has two methos 1.pre-Before and 2. post-after
+6. Middleware accept two arguements 1. the name of the event or our function to run and a callback function. 
+NOTE: for the callback function we use normal function not arrow function because arrow functions don't bind this keyword
+
+# CODE DEMO
+```javacscript
+userSchema('save', async function (next) {
+    const user = this
+     console.log('Just before saving)
+    next()
+})
+```
+7. The function accept an arguement called next
+8. The goal is we want to run a function before calling the save method
+9. We call next when we are done 
+
+# SECURITY / PASSWORD ENCRYPTION
+
+```javascript
+//PASSWORD HASHING
+const bcrypt = require('bcryptjs');
+
+const myFunction = async () => {
+    const password = 'emmanuel$2018';
+    const hashedPassword = await bcrypt.hash(password, 8);
+    console.log(password);
+    console.log(hashedPassword);
+
+    const isMatch = await bcrypt.compare('emmanuel$2018', hashedPassword);
+    console.log(isMatch)
+}
+myFunction()
+```
+
 ### Resources
 1. [mongodb](https://www.mongodb.com/)
 2. [Robo 3T](https://robomongo.org/download)
@@ -296,3 +399,5 @@ app.listen(port, () => {
 6. [Nodemon](https://www.npmjs.com/package/nodemon)
 7. [http status code](https://httpstatuses.com/)
 8. [mongoose queries](https://mongoosejs.com/docs/queries.html)
+9. [bcrypts for password](https://www.npmjs.com/package/bcryptjs)
+10. [Middleware](https://mongoosejs.com/docs/middleware.html)
