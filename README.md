@@ -170,6 +170,123 @@ app.listen(port, () => {
 2. Within the end point you can create any action example deleting, updating, reading data
 3. 
 
+## CREATING SEPARATE ROUTERS
+1. Create a separate file for all your routes
+2. require express module
+3. Create instance of the route created
+4. Load the router created inside the index.js
+5. Register the router/Using the router in index.js
+5. On the router file load all the modules required    by the router
+6. Lastly export the router file
+
+## CODE DEMO
+### ON THE ROUTER FILE
+```javascript
+const express = require('express');
+const User = require('../models/user')
+const router = new express.Router();
+
+//USERS
+
+//CREATING A USER
+router.post('/users', async (req, res) => {
+    const user = new User(req.body);
+    try {
+        await user.save();
+        res.status(201).send(user)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+ })
+ 
+ //READING/fetching  ALL USERS
+ router.get('/users', async (req, res)=> {
+     try {
+         const users = await User.find({});
+         res.send(users)
+     } catch (error) {
+         res.status(500).send(error)
+     }
+ })
+ 
+ //fetching individual user
+  
+ router.get('/users/:id',  async (req, res) => {
+ 
+     const _id = req.params.id
+     try {
+         const user = await User.findById(_id);
+         if(!user){
+             return res.status(404).send()
+         }
+         res.send(user)
+     } catch (error) {
+         res.status(500).send()
+     }   
+ })
+ 
+ 
+ //Updating user
+ router.patch('/users/:id', async (req, res) => {
+     //Fields allowed to be updated
+     const updates = Object.keys(req.body);
+     const allowedUpdates = ['name', 'email', 'password', 'age'];
+     const isValidOperation = updates.every((update) => {
+         return allowedUpdates.includes(update)
+     })
+ 
+     if(!isValidOperation){
+         return res.status(400).send({error:'Invalid updates'})
+     }
+ 
+     try {
+         const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true})
+         if(!user) {
+             return res.status(404).send()
+         }
+         res.send(user)
+     } catch (error) {
+         res.status(500).send(error)
+     }
+ })
+ 
+ //Deleteing User
+ router.delete('/users/:id', async (req, res) => {
+     try {
+         const user = await User.findByIdAndDelete(req.params.id);
+ 
+         if(!user){
+             return res.status(404).send()
+         }
+         res.send(user)
+     } catch (error) {
+         res.status(500).send(error)
+     }
+ })
+ 
+module.exports = router;
+```
+## REGISTERING/USING ON THE INDEX.JS FILE
+
+```javascript
+const express = require('express');
+require('./db/mongoose');
+const User = require('./models/user');
+const Task = require('./models/task');
+const UserRouter = require('./routers/user')
+const app = express()
+const port = process.env.PORT || 3000
+
+app.use(express.json())
+
+//Registering the user Router
+app.use(UserRouter)
+
+//SERVER
+app.listen(port, () => {
+    console.log('Server is runing on port ' + port)
+})
+```
 ### Resources
 1. [mongodb](https://www.mongodb.com/)
 2. [Robo 3T](https://robomongo.org/download)
