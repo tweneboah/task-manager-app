@@ -114,7 +114,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
   })
 ```
 
-# PROCEDURE B
+# PROCEDURE 
+# B
 
 ## CREATING EXPRESS SERVER
 1. Create an index.js file that's the root of the application
@@ -123,6 +124,52 @@ mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
 [Express](https://expressjs.com/)
 [Nodemon](https://www.npmjs.com/package/nodemon)
 
+### CODE DEMO
+```javascript
+const express = require('express');
+const app = express() //This create express application
+const port = process.env.PORT || 3000
+
+app.listen(port, () => {
+    console.log('Server is running on port', port)
+})
+```
+
+# PROCEDURE 
+# C
+## CREATING ENDPOINTS/RESOURCES
+1. The endpoints/resources are the url user's visit for information
+## TYPES OF ENDPOITS
+1. get => Fetching data
+2. post => Creating data
+3. delete => Delete data
+4. patch => Update data
+
+### CREATING A SEVER
+```javascript
+const express = require('express');
+const app = express() //This create express application
+const port = process.env.PORT || 3000
+
+//app.use() is use to customise express
+// app.use(express.json()) is use to convert incoming json to object so that we can access it on the res body
+app.use(express.json())
+
+//CREATING USER
+app.post('/users', (req, res) => {
+    console.log(req.body) //This contains all our data to the server
+    res.send('Testing')
+})
+
+app.listen(port, () => {
+    console.log('Server is running on port', port)
+})
+```
+### CREATING ENDPOINTS 
+1. The end points are what get back to users when the visit that url
+2. Within the end point you can create any action example deleting, updating, reading data
+3. 
+
 ### Resources
 1. [mongodb](https://www.mongodb.com/)
 2. [Robo 3T](https://robomongo.org/download)
@@ -130,3 +177,5 @@ mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
 4. [Validator](https://www.npmjs.com/package/validator)
 5. [Express](https://expressjs.com/)
 6. [Nodemon](https://www.npmjs.com/package/nodemon)
+7. [http status code](https://httpstatuses.com/)
+8. [mongoose queries](https://mongoosejs.com/docs/queries.html)
