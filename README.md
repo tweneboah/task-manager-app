@@ -39,18 +39,80 @@ const MongoClient = mongodb.MongoClient; //This gives the power to connect to th
 //STEPS
 //1. We have to define the connection url to the database
 const connectionURL ='mongodb://127.0.0.1:27017';
-const databaseName ='task-manager-app'//Your database name
+const databaseName ='task-manager-app'//Your database name. This is created automatically
 
 MongoClient.connect(connectionURL, {useNewUrlParser: true}, (error, client) => {
    if(error) {
       return console.log('Unable to connect to the database')
    }
    console.log('Successfully connected!')
+   //Creating a new collection under our database name call users
+   const db = client.db(databaseName)//This accept database name
+   db.collection('users').insertOne({
+       name: 'Emmanuel',
+       age: '30'
+   })
 })
 ```
-
+7. After that refresh the Robo 3T and you will see your database been created
 ### Resources
 1. [mongodb](https://www.mongodb.com/)
 2. [Robo 3T](https://robomongo.org/download)
 3.[Mongodb driver for node js](https://docs.mongodb.com/ecosystem/drivers/)
 
+
+# USING MONGOOSE to manipulate mongodb
+[Mongoose](https://mongoosejs.com/)
+1. This is an npm library that makes our life easier
+2. mongoose is an ODM = Object Document Mapper
+
+# STEPS
+
+### 1. Installing mongoose
+npm i mongoose [npm mongoose](https://www.npmjs.com/package/mongoose)
+
+### 2. requiring the module 
+```javascript
+const mongoose = require('mongoose')
+```
+### 3. Connect to the database
+
+```javascript
+mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
+    useNewUrlParser: true, 
+    useCreateIndex: true,//help us to quickly access our database
+    useFindAndModify: false
+  });
+```
+
+### 4. Create a model
+  1. This is the structure of our database
+  2. This accept two arguement; the name of your model and the fields you want to create
+  3. We can set type and validation of the field
+  ```javascript
+    const User = mongoose.model('User', {
+   name: {
+         type: String
+   },
+   age: {
+        type: Number
+   }
+  })
+  ```
+
+### 5. Creating an instance of the model thus creating actual user
+```javascript
+  const me = new User ({
+    name: 'Twenemboa',
+    age: 29
+  })
+```
+
+### 6. Saving the data to the database
+```javascript
+ me.save().then((me) => {
+     console.log(me)
+  }).catch((error) => {
+    console.log('Error', error)
+  })
+```
