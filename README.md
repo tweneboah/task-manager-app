@@ -2,6 +2,7 @@
 This is an app to manage your daily routines
 
 # PROCEDURES
+# A
 ## Creating of a Server using express
 
 
@@ -55,11 +56,6 @@ MongoClient.connect(connectionURL, {useNewUrlParser: true}, (error, client) => {
 })
 ```
 7. After that refresh the Robo 3T and you will see your database been created
-### Resources
-1. [mongodb](https://www.mongodb.com/)
-2. [Robo 3T](https://robomongo.org/download)
-3.[Mongodb driver for node js](https://docs.mongodb.com/ecosystem/drivers/)
-
 
 # USING MONGOOSE to manipulate mongodb
 [Mongoose](https://mongoosejs.com/)
@@ -76,7 +72,8 @@ npm i mongoose [npm mongoose](https://www.npmjs.com/package/mongoose)
 const mongoose = require('mongoose')
 ```
 ### 3. Connect to the database
-
+1. This accept connection to the database
+2. It also create a new collection
 ```javascript
 mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
     useNewUrlParser: true, 
@@ -116,3 +113,20 @@ mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
     console.log('Error', error)
   })
 ```
+
+# PROCEDURE B
+
+## CREATING EXPRESS SERVER
+1. Create an index.js file that's the root of the application
+
+2. Install nodemon and express
+[Express](https://expressjs.com/)
+[Nodemon](https://www.npmjs.com/package/nodemon)
+
+### Resources
+1. [mongodb](https://www.mongodb.com/)
+2. [Robo 3T](https://robomongo.org/download)
+3. [Mongodb driver for node js](https://docs.mongodb.com/ecosystem/drivers/)
+4. [Validator](https://www.npmjs.com/package/validator)
+5. [Express](https://expressjs.com/)
+6. [Nodemon](https://www.npmjs.com/package/nodemon)
