@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
 
 //USER MODEL
 
-userSchema('save', async function (next) {
+userSchema.pre('save', async function (next) {
     const user = this
      console.log('Just before saving')
     next()

@@ -362,7 +362,7 @@ NOTE: for the callback function we use normal function not arrow function becaus
 
 # CODE DEMO
 ```javacscript
-userSchema('save', async function (next) {
+userSchema.pre('save', async function (next) {
     const user = this
      console.log('Just before saving)
     next()
@@ -371,6 +371,13 @@ userSchema('save', async function (next) {
 7. The function accept an arguement called next
 8. The goal is we want to run a function before calling the save method
 9. We call next when we are done 
+10. If we don't call next, our app will hang up
+11. So in this case we have to have has our passowrd before saving to database
+12. Since this function is attached to the user model as middleware, anytime a user visit the user endpoint the middleware function will run before the router functions also runs
+13. Inside the middleware function above, the ```javascript
+const user = this
+
+represent the user object, so we can access all the properties of that  user object
 
 # SECURITY / PASSWORD ENCRYPTION
 
