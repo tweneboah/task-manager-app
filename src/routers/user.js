@@ -91,8 +91,9 @@ router.post('/users', async (req, res) => {
  router.post('/users/login', async (req, res) => {
     
      try {
-         const user = await User.findByCredentials(req.body.email, req.body.password)
-         res.send(user)
+         const user = await User.findByCredentials(req.body.email, req.body.password)//For this we are working on the whole collection
+         const token = await user.generateAuthToken() //Generating token for specific data
+         res.send({user, token})
      } catch (error) {
          res.status(400).send(error)
      }
