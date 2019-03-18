@@ -403,6 +403,52 @@ const myFunction = async () => {
 myFunction()
 ```
 
+# PROCUDURE
+# E - LOGIN
+## STEPS
+1. Create a login route inside the user router
+```javascript
+
+ router.post('/users/login', async (req, res) => {
+     try {
+         const user = await User.findByCredentials(req.body.email, req.body.password)
+         res.send(user)
+     } catch (error) {
+         res.status(400).send(error)
+     }
+ })
+```
+### CODE EXPLANATION
+1. I created a function called "findByCredentials" inside the user model.
+2. This function accept two arguements 1. email 2. password
+3. After this then we use this function inside the user router.
+4. Inside the user router is where we passed in the actual arguements.
+5. req.body.email = The email inside the database
+6. req.body.password = password inside the database
+
+2. It is the responsible for this route to find a user by their password and email
+3. We have to create a reusable function so we will create inside the user model
+4. We have to create a schema for it
+5. The main note you have to note is when creating a login system put restriction on the email by setting a unique property of the email inside the database,
+
+```javascript
+userSchema.statics.findByCredentials = async (email, password) => {
+    //find by email
+    const user = await User.findOne({email: email});
+
+    if(!user) {
+        throw new Error('Unable to login')
+    }
+  //Verify by password
+  const isMatch = await bcrypt.compare(password, user.password)//password = plain password and user.password = hashed password
+  if(!isMatch) {
+      throw new Error('Unable to login')
+  }
+  return user
+}
+```
+
+
 ### Resources
 1. [mongodb](https://www.mongodb.com/)
 2. [Robo 3T](https://robomongo.org/download)
@@ -415,3 +461,11 @@ myFunction()
 9. [bcrypts for password](https://www.npmjs.com/package/bcryptjs)
 10. [Middleware](https://mongoosejs.com/docs/middleware.html)
 11. [Postman](https://www.getpostman.com/)
+12. [jwt token for login](https://www.npmjs.com/package/jsonwebtoken)
+
+
+
+
+
+
+
