@@ -368,14 +368,20 @@ userSchema.pre('save', async function (next) {
     next()
 })
 ```
+### NOTE: 
+#### =>  The 'save' argument is a built in function for middleware that saves document
 7. The function accept an arguement called next
 8. The goal is we want to run a function before calling the save method
 9. We call next when we are done 
 10. If we don't call next, our app will hang up
 11. So in this case we have to have has our passowrd before saving to database
 12. Since this function is attached to the user model as middleware, anytime a user visit the user endpoint the middleware function will run before the router functions also runs
-13. Inside the middleware function above, the ```javascript
+13. Inside the middleware function above, the
+14. some mongose api by pass midleware example findByIdAndUpadte so unless we manually set it
+
+```javascript
 const user = this
+```
 
 represent the user object, so we can access all the properties of that  user object
 
@@ -408,3 +414,4 @@ myFunction()
 8. [mongoose queries](https://mongoosejs.com/docs/queries.html)
 9. [bcrypts for password](https://www.npmjs.com/package/bcryptjs)
 10. [Middleware](https://mongoosejs.com/docs/middleware.html)
+11. [Postman](https://www.getpostman.com/)
