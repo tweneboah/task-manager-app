@@ -8,7 +8,8 @@ router.post('/users', async (req, res) => {
     const user = new User(req.body);
     try {
         await user.save();
-        res.status(201).send(user)
+        const token = await user.generateAuthToken() //Generating token for specific data
+        res.status(201).send({user, token})
     } catch (error) {
         res.status(400).send(error)
     }
@@ -92,7 +93,7 @@ router.post('/users', async (req, res) => {
     
      try {
          const user = await User.findByCredentials(req.body.email, req.body.password)//For this we are working on the whole collection
-         const token = await user.generateAuthToken() //Generating token for specific data
+         /* ¸ */const token = await user.generateAuthToken() //Generating token for specific data
          res.send({user, token})
      } catch (error) {
          res.status(400).send(error)
