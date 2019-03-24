@@ -6,18 +6,20 @@ const TaskRouter = require('./routers/task')
 const app = express()
 const port = process.env.PORT || 3000
 
-app.use(express.json())
 
+// //MIDDLEWARE
+// app.use((req, res, next) => {
+  
+// })
+
+app.use(express.json())
 //Registering the user Router
 app.use(UserRouter)
-
 //Registering Task router
 app.use(TaskRouter)
 
 //SERVER
-app.listen(port, () => {
-    console.log('Server is runing on port ' + port)
-})
+
 
 
 //JWT WEB TOKEN //Generating authenticated tokens and validating them
@@ -29,3 +31,8 @@ const myFunction = async () => {
   console.log(data) 
 }
 myFunction()
+
+
+app.listen(port, () => {
+  console.log('Server is runing on port ' + port)
+})
