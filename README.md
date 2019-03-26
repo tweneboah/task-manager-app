@@ -85,11 +85,6 @@ const mongoose = require('mongoose')
 2. It also create a new collection
 ```javascript
 const mongoose = require('mongoose')
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 26e11e8af6835c3c3672649676eb63924a6b4e41
 mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
     useNewUrlParser: true, 
     useCreateIndex: true,//help us to quickly access our database
