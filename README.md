@@ -84,6 +84,7 @@ const mongoose = require('mongoose')
 
 2. It also create a new collection
 ```javascript
+const mongoose = require('mongoose')
 mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
     useNewUrlParser: true, 
     useCreateIndex: true,//help us to quickly access our database
@@ -650,6 +651,83 @@ userSchema.methods.generateAuthToken = async function() {
 ```
 # MIDDLEWARE IMPLEMENTATION
 
+1.Without middleware => new request = run router handler
+
+2. With middleware=> new request . Do something -> run router
+
+3. With middleware we can customise the server to suit our needs
+
+4. Middleware can use to check for authentication
+5. You can prevent a certain page to run
+
+# REGISTERING MIDDLWARE
+1. When you pass and express functions to app.use() is not a middleware but if we pass in our own functions then it becomes a middleware
+
+2. We use next to register a middleware
+
+3 Without calling next our route handler will not run
+
+4. Middleware run from top to bottom
+```javascript
+app.use((req, res, next) => {
+  console.log(req.method, req.path)
+
+  if(req.method === 'GET'){
+         res.send('GET request is disable')
+  }else{
+    next()
+  }
+ })
+```
+## CREATING SITE IS UNDER CONSTRUCTION USING MIDDLEWARE
+```javascript
+//MAINTAINENANCE MODE
+app.use((req, res, next) => {
+  if(req.method === "GET"){
+  res.status(503).send('Site is under maintainence')
+  }else{
+    next()
+  }
+})
+```
+## CREATING MIDDLEWARE TO BE USE IN A MULTIPLE PLACES
+1. In this case we have to create a separate function
+
+2. Create middleware file 
+
+3. Import this file to any file that needs this middleware
+
+### HOW TO USE/PASS THE MIDDLEWARE TO A ROUTE
+
+```javascript
+ router.get('/users', auth,  async (req, res)=> {
+     try {
+         const users = await User.find({});
+         res.send(users)
+     } catch (error) {
+         res.status(500).send(error)
+     }
+ })
+```
+1. Always pass the middleware as a second arguement
+
+2. The above code means that when a user visit /users run the middleware before executing the router
+
+## CODE EXPLANATION
+1. The whole code means that if a user uses a GET method the handler will not run 
+
+2. The work of the next will determine if the user obeys our rules concerning what the cleint is requesting
+
+# HEADERS
+## GETTING BACK JWT TOKENS TO THE USER
+
+1. Use headers to set authentication
+
+2. We use headers to provide additional infornation to the server
+
+3. We can also get back headers as response
+
+4. We provide key value pairs when setting headers
 
 ### Resources
 1. [mongodb](https://www.mongodb.com/)

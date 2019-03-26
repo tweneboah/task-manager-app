@@ -8,8 +8,36 @@ const port = process.env.PORT || 3000
 
 
 // //MIDDLEWARE
+
+//1.Without middleware => new request = run router handler
+//2. With middleware=> new request . Do something -> run router
+// With middleware we can customise the server to suit our needs
+//Middleware can use to check for authentication
+//You can prevent a certain page to run
+
+//REGISTERING MIDDLWARE
+
+//When you pass and express functions to app.use() is not a middleware but if we pass in our own functions then it becomes a middleware
+
+// We use next to register a middleware
+// Without calling next our route handler will not run
 // app.use((req, res, next) => {
-  
+//   console.log(req.method, req.path)
+
+//   if(req.method === 'GET'){
+//          res.send('GET request is disable')
+//   }else{
+//     next()
+//   }
+//  })
+
+//MAINTAINENANCE MODE
+// app.use((req, res, next) => {
+//   if(req.method === "GET"){
+//   res.status(503).send('Site is under maintainence')
+//   }else{
+//     next()
+//   }
 // })
 
 app.use(express.json())

@@ -3,16 +3,11 @@ const Task = require('../models/task')
 const router = new express.Router();
 
 
-//TASK
-
 //CREATING TASK
-
-
 router.post('/tasks', (req, res) => {
     const task = new Task(req.body);
     task.save().then((result) => {
-        res.status(201).send(result)
-         
+        res.status(201).send(result)     
     }).catch((err) => {
        res.status(400).send(err)
     });
