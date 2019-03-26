@@ -85,6 +85,11 @@ const mongoose = require('mongoose')
 2. It also create a new collection
 ```javascript
 const mongoose = require('mongoose')
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 26e11e8af6835c3c3672649676eb63924a6b4e41
 mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
     useNewUrlParser: true, 
     useCreateIndex: true,//help us to quickly access our database
@@ -102,16 +107,105 @@ mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
   4. Model accept the name of your collection/table, objects thus the fields of the object
 
   5. Model also accept other options like middleware
+  
+  6. Create this user model inside the model folder
 
   ```javascript
-    const User = mongoose.model('User', {
-   name: {
-         type: String
-   },
-   age: {
-        type: Number
-   }
+    const mongoose = require('mongoose')
+const validator = require('validator')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+
+
+//CREATING SCHEMA
+const userSchema = new mongoose.Schema({
+    name: {
+         type: String,
+         required: true,
+         trim: true
+    },
+    email: {
+        type:String,
+        required: true,
+        trim: true,
+        lowercase: true,
+        unique: true,
+        validate(value) {
+            if(!validator.isEmail(value)) {
+                throw new Error('Email is invalid')
+            }
+        }
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 7,
+      trim: true,
+      validate(value){
+          if(value.toLowerCase().includes('password')) {
+              throw new Error('Password cannot contain password')
+          }
+      }
+    },
+    age: {
+         type: Number,
+         default: 0,
+         validate(value) {
+             if(value < 0){
+                 throw new Error('Age must be a positive number')
+             }
+         }
+    },
+    tokens: [{
+        token: {
+            type: String,
+            require: true
+        }
+    }]
   })
+
+//USER MODEL
+
+userSchema.methods.generateAuthToken = async function() {
+  const user = this;
+  const token = jwt.sign({_id:user._id.toString()}, 'thisismynewcourse')
+
+  user.tokens = user.tokens.concat({token:token})
+
+  //Saving token to the database
+  await user.save()
+
+  return token
+
+}
+//NOTE userSchema.statics accessible on the model = model method
+//userSchema.methods accessible on the instances = instant methods
+userSchema.statics.findByCredentials = async (email, password) => {
+    //find by email
+    const user = await User.findOne({email: email});
+
+    if(!user) {
+        throw new Error('Unable to login')
+    }
+  //Verify by password
+  const isMatch = await bcrypt.compare(password, user.password)//password = plain password and user.password = hashed password
+  if(!isMatch) {
+      throw new Error('Unable to login')
+  }
+  return user
+}
+//HAS THE PLAIN TEXT PASSWORD BEFORE SAVING
+userSchema.pre('save', async function (next) {
+    const user = this
+     if(user.isModified('password')) {
+         user.password = await bcrypt.hash(user.password, 8)
+     }
+    next()
+})
+ const User = mongoose.model('User', userSchema )
+
+ module.exports = User;
+  
   ```
 
 ### 5. Creating an instance of the model thus creating actual user
