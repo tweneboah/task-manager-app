@@ -47,9 +47,6 @@ app.use(UserRouter)
 app.use(TaskRouter)
 
 //SERVER
-
-
-
 //JWT WEB TOKEN //Generating authenticated tokens and validating them
 const jwt = require('jsonwebtoken')
 const myFunction = async () => {
