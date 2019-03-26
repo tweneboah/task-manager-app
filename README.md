@@ -75,14 +75,13 @@ MongoClient.connect(connectionURL, {useNewUrlParser: true}, (error, client) => {
 ### 1. Installing mongoose
 npm i mongoose [npm mongoose](https://www.npmjs.com/package/mongoose)
 
-### 2. requiring the module 
-```javascript
-const mongoose = require('mongoose')
-```
-### 3. Connect to the database
+### 2. Connect to the database
 1. This accept connection to the database
 
+2. Create a new folder call db inside your src folder
+
 2. It also create a new collection
+
 ```javascript
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
@@ -105,15 +104,18 @@ mongoose.connect('mongodb://127.0.0.1:27017/task-manager-api', {
   
   6. Create this user model inside the model folder
 
+  7. After that export it to make available 
+
   ```javascript
     const mongoose = require('mongoose')
-const validator = require('validator')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+    const validator = require('validator')
+    const bcrypt = require('bcryptjs')
+    const jwt = require('jsonwebtoken')
 
 
-//CREATING SCHEMA
-const userSchema = new mongoose.Schema({
+#  CREATING SCHEMA
+```javascript
+   const userSchema = new mongoose.Schema({
     name: {
          type: String,
          required: true,
@@ -203,8 +205,67 @@ userSchema.pre('save', async function (next) {
   
   ```
 
-### 5. Creating an instance of the model thus creating actual user
+### 5. Creating  a User
+1. All data actions/request by the user are handle by the routes, so navigate to the User router folder
+
+2. Require all the modules needed
 ```javascript
+const express = require('express');
+const User = require('../models/user')
+const auth = require('../middleware/auth')
+const router = new express.Router();
+```
+3. Create an Instance of the user model created inside the model folder
+```javascript
+ const user = new User();
+```
+i. Inside the User() is where we will pass the user data to be created
+
+ii. Since we are notsending the user data from a form but rather from a server (Postman), the user data are coming from the request body thus (req.body) we there pass this req.body to the instance of our user model
+
+```javascript
+ const user = new User();
+```
+### Saving data to the database
+```javascript
+await User.save()
+```
+### Sending back the response to use
+```javascript
+res.status(201).send({user})
+```
+### OVERALL CODE
+```javascript
+router.post('/users', async (req, res) => {
+    const user = new User(req.body);
+    try {
+        await user.save();
+        const token = await user.generateAuthToken() //Generating token for specific data
+        res.status(201).send({user, token})
+    } catch (error) {
+        res.status(400).send(error)
+    }
+ })
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const me = new User ({
     name: 'Twenemboa',
     age: 29
